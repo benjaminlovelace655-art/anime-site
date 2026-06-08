@@ -16,29 +16,28 @@ interface Comment {
 
 const COMMENTS_KEY = 'anibyte_comments';
 
-function getComments(animeId: number, episode: number): Comment[] {
+function getComments(key: string): Comment[] {
   try {
-    const key = `${COMMENTS_KEY}_${animeId}_${episode}`;
     return JSON.parse(localStorage.getItem(key) || '[]');
   } catch {
     return [];
   }
 }
 
-function saveComments(animeId: number, episode: number, comments: Comment[]) {
-  const key = `${COMMENTS_KEY}_${animeId}_${episode}`;
+function saveComments(key: string, comments: Comment[]) {
   localStorage.setItem(key, JSON.stringify(comments));
 }
 
-export default function CommentSection({ animeId, episode }: { animeId: number; episode: number }) {
+export default function CommentSection({ animeId, episode, storageKey }: { animeId: number; episode: number; storageKey?: string }) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
   const [posting, setPosting] = useState(false);
+  const commentKey = storageKey || `${COMMENTS_KEY}_${animeId}_${episode}`;
 
   useEffect(() => {
-    setComments(getComments(animeId, episode));
-  }, [animeId, episode]);
+    setComments(getComments(commentKey));
+  }, [commentKey]);
 
   const handlePost = () => {
     if (!text.trim() || !user) return;
@@ -52,7 +51,7 @@ export default function CommentSection({ animeId, episode }: { animeId: number; 
       avatarUrl: user.avatarUrl,
     };
     const updated = [newComment, ...comments];
-    saveComments(animeId, episode, updated);
+    saveComments(commentKey, updated);
     setComments(updated);
     setText('');
     setPosting(false);
