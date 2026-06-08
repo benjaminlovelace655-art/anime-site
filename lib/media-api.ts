@@ -7,52 +7,76 @@ export interface MediaItem {
   releaseDate: string;
   url: string;
   type: 'movie' | 'tv';
+  imdbId: string;
 }
 
-interface RSSResult {
-  results: {
-    id: string;
-    name: string;
-    artworkUrl100: string;
-    artistName: string;
-    genres: { name: string }[];
-    releaseDate: string;
-    url: string;
-  }[];
+interface SampleMovie {
+  id: number;
+  title: string;
+  posterURL: string;
+  imdbId: string;
 }
 
-async function fetchRSS(feed: string): Promise<MediaItem[]> {
+interface TVmazeShow {
+  id: number;
+  name: string;
+  genres: string[];
+  image: { medium: string; original: string } | null;
+  premiered: string;
+  externals: { tvrage?: number; thetvdb?: number; imdb?: string };
+  network?: { name: string };
+  webChannel?: { name: string };
+}
+
+export async function getTopMovies(): Promise<MediaItem[]> {
   try {
-    const res = await fetch(feed, { next: { revalidate: 3600 } });
+    const res = await fetch('https://api.sampleapis.com/movies/classic', { next: { revalidate: 86400 } });
     if (!res.ok) return [];
-    const data: RSSResult = await res.json();
-    return (data.results || []).map(item => ({
-      id: item.id,
-      title: item.name,
-      image: item.artworkUrl100.replace('100x100', '600x600'),
-      artist: item.artistName,
-      category: item.genres?.[0]?.name || '',
-      releaseDate: item.releaseDate || '',
-      url: item.url,
-      type: feed.includes('tv-shows') ? 'tv' as const : 'movie' as const,
+    const data: SampleMovie[] = await res.json();
+    return data.slice(0, 50).map(item => ({
+      id: String(item.id),
+      title: item.title,
+      image: item.posterURL,
+      artist: 'Classic Film',
+      category: 'Classic',
+      releaseDate: '',
+      url: `https://www.imdb.com/title/${item.imdbId}`,
+      type: 'movie' as const,
+      imdbId: item.imdbId,
     }));
   } catch {
     return [];
   }
 }
 
-export async function getTopMovies() {
-  return fetchRSS('https://rss.applemarketingtools.com/api/v2/us/movies/top-movies/25.json');
+export async function getTopTVShows(): Promise<MediaItem[]> {
+  try {
+    const res = await fetch('https://api.tvmaze.com/shows?page=0', { next: { revalidate: 86400 } });
+    if (!res.ok) return [];
+    const data: TVmazeShow[] = await res.json();
+    return data
+      .filter(s => s.externals?.imdb)
+      .slice(0, 50)
+      .map(item => ({
+        id: String(item.id),
+        title: item.name,
+        image: item.image?.original?.replace('http:', 'https:') || item.image?.medium?.replace('http:', 'https:') || '',
+        artist: item.network?.name || item.webChannel?.name || 'TV',
+        category: item.genres?.[0] || '',
+        releaseDate: item.premiered || '',
+        url: `https://www.imdb.com/title/${item.externals.imdb}`,
+        type: 'tv' as const,
+        imdbId: item.externals.imdb || '',
+      }));
+  } catch {
+    return [];
+  }
 }
 
-export async function getTopTVShows() {
-  return fetchRSS('https://rss.applemarketingtools.com/api/v2/us/tv-shows/top-tv-shows/25.json');
+export async function getTopMovies10(): Promise<MediaItem[]> {
+  return (await getTopMovies()).slice(0, 10);
 }
 
-export async function getTopMovies10() {
-  return fetchRSS('https://rss.applemarketingtools.com/api/v2/us/movies/top-movies/10.json');
-}
-
-export async function getTopTVShows10() {
-  return fetchRSS('https://rss.applemarketingtools.com/api/v2/us/tv-shows/top-tv-shows/10.json');
+export async function getTopTVShows10(): Promise<MediaItem[]> {
+  return (await getTopTVShows()).slice(0, 10);
 }

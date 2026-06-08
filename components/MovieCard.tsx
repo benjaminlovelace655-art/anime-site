@@ -8,9 +8,17 @@ export default function MovieCard({ item }: { item: MediaItem }) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
 
+  const details = new URLSearchParams({
+    title: item.title,
+    poster: item.image,
+    year: item.releaseDate,
+    type: item.type,
+    artist: item.artist,
+  }).toString();
+
   return (
     <div
-      onClick={() => router.push(`/watch-movie/${encodeURIComponent(item.title)}`)}
+      onClick={() => router.push(`/watch-movie/${item.imdbId}?${details}`)}
       className="group relative block rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/30 transition-all duration-300 card-hover cursor-pointer"
     >
       <div className="aspect-[2/3] overflow-hidden bg-[var(--bg-secondary)]">
