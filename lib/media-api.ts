@@ -2,13 +2,18 @@ export interface MediaItem {
   id: string;
   title: string;
   image: string;
+  backdrop: string;
   artist: string;
   category: string;
+  genres: string[];
   releaseDate: string;
+  year: string;
   url: string;
   type: 'movie' | 'tv';
   imdbId: string;
   mature: boolean;
+  rating: number;
+  description: string;
 }
 
 interface SampleMovie {
@@ -28,12 +33,17 @@ interface TVmazeShow {
   network?: { name: string };
   webChannel?: { name: string };
   rating?: { average: number };
+  summary?: string;
 }
 
-const MATURE_GENRES = new Set(['Adult', 'Erotic', 'Horror']);
+const MATURE_KEYWORDS = new Set(['Adult', 'Erotic', 'Horror', '18+', 'XXX']);
 
-function isMatureTV(tv: TVmazeShow): boolean {
-  return tv.genres?.some(g => MATURE_GENRES.has(g)) ?? false;
+function isMatureByGenre(genres: string[]): boolean {
+  return genres?.some(g => MATURE_KEYWORDS.has(g)) ?? false;
+}
+
+function yearFromDate(date: string): string {
+  return date ? date.substring(0, 4) : '';
 }
 
 const MOVIE_ENDPOINTS = [
@@ -58,13 +68,18 @@ async function fetchMoviesFromEndpoint(ep: typeof MOVIE_ENDPOINTS[0]): Promise<M
       id: `movie-${ep.category}-${item.id}`,
       title: item.title,
       image: item.posterURL,
+      backdrop: '',
       artist: ep.category,
       category: ep.category,
+      genres: [ep.category],
       releaseDate: '',
+      year: '',
       url: `https://www.imdb.com/title/${item.imdbId}`,
       type: 'movie' as const,
       imdbId: item.imdbId,
       mature: ep.mature,
+      rating: 0,
+      description: '',
     }));
   } catch {
     return [];
@@ -95,13 +110,18 @@ async function fetchTVPage(page: number): Promise<MediaItem[]> {
         id: `tv-${item.id}`,
         title: item.name,
         image: item.image?.original?.replace('http:', 'https:') || item.image?.medium?.replace('http:', 'https:') || '',
+        backdrop: '',
         artist: item.network?.name || item.webChannel?.name || 'TV',
         category: item.genres?.[0] || '',
+        genres: item.genres || [],
         releaseDate: item.premiered || '',
+        year: yearFromDate(item.premiered),
         url: `https://www.imdb.com/title/${item.externals.imdb}`,
         type: 'tv' as const,
         imdbId: item.externals.imdb || '',
-        mature: isMatureTV(item),
+        mature: isMatureByGenre(item.genres),
+        rating: item.rating?.average || 0,
+        description: item.summary ? item.summary.replace(/<[^>]*>/g, '') : '',
       }));
   } catch {
     return [];

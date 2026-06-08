@@ -1,13 +1,15 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import CommentSection from '@/components/CommentSection';
 
 const EMBED_SOURCES = [
-  { name: '2Embed', url: (id: string) => `https://www.2embed.stream/embed/movie/${id}` },
-  { name: 'VidSrc', url: (id: string) => `https://vidsrc.xyz/embed/movie/${id}` },
-  { name: 'MultiEmbed', url: (id: string) => `https://multiembed.mov/directstream.php?video_id=${id}` },
+  { name: '2Embed', movie: (id: string) => `https://www.2embed.stream/embed/movie/${id}`, tv: (id: string) => `https://www.2embed.stream/embed/tv/${id}` },
+  { name: 'VidSrc', movie: (id: string) => `https://vidsrc.xyz/embed/movie/${id}`, tv: (id: string) => `https://vidsrc.xyz/embed/tv/${id}` },
+  { name: 'MultiEmbed', movie: (id: string) => `https://multiembed.mov/directstream.php?video_id=${id}`, tv: (id: string) => `https://multiembed.mov/directstream.php?video_id=${id}` },
+  { name: 'VidSrc.to', movie: (id: string) => `https://vidsrc.to/embed/movie/${id}`, tv: (id: string) => `https://vidsrc.to/embed/tv/${id}` },
+  { name: 'SuperEmbed', movie: (id: string) => `https://embed.su/embed/movie/${id}`, tv: (id: string) => `https://embed.su/embed/tv/${id}` },
 ];
 
 export default function WatchMoviePage({
@@ -15,7 +17,10 @@ export default function WatchMoviePage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ title?: string; poster?: string; year?: string; type?: string; artist?: string }>;
+  searchParams: Promise<{
+    title?: string; poster?: string; year?: string; type?: string;
+    artist?: string; rating?: string; genres?: string; description?: string;
+  }>;
 }) {
   const { id } = use(params);
   const sp = use(searchParams);
@@ -26,9 +31,23 @@ export default function WatchMoviePage({
   const year = sp.year || '';
   const mediaType = sp.type || 'movie';
   const artist = sp.artist || '';
+  const rating = sp.rating || '';
+  const genres = sp.genres || '';
+  const description = sp.description || '';
 
   const [embedSrc, setEmbedSrc] = useState(0);
   const [embedError, setEmbedError] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const currentEmbed = EMBED_SOURCES[embedSrc];
+  const embedUrl = useMemo(() => {
+    if (!currentEmbed) return '';
+    return mediaType === 'tv' ? currentEmbed.tv(imdbId) : currentEmbed.movie(imdbId);
+  }, [currentEmbed, imdbId, mediaType]);
+
+  const genreList = useMemo(() => genres ? genres.split(',').filter(Boolean) : [], [genres]);
 
   if (!imdbId) {
     return (
@@ -47,95 +66,143 @@ export default function WatchMoviePage({
     );
   }
 
-  const currentEmbed = EMBED_SOURCES[embedSrc];
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 pt-20">
-      <div className="flex items-center gap-2 text-sm text-[var(--text-muted)] mb-4">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/movies" className="hover:text-white transition-colors">Movies & TV</Link>
-        <span>/</span>
-        <span className="text-white truncate">{title || imdbId}</span>
-      </div>
+    <div className="min-h-screen pt-20 pb-16">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center gap-2 text-sm text-[var(--text-muted)] mb-4 flex-wrap">
+          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/movies" className="hover:text-white transition-colors">Movies & TV</Link>
+          <span>/</span>
+          <span className="text-white truncate max-w-[200px]">{title || imdbId}</span>
+        </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 min-w-0">
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-[var(--border)]">
-            <iframe
-              src={currentEmbed.url(imdbId)}
-              className="absolute inset-0 w-full h-full"
-              allowFullScreen
-              allow="autoplay; encrypted-media"
-              title={title}
-              onError={() => setEmbedError(true)}
-            />
-            {embedError && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 p-6">
-                <p className="text-sm text-gray-400 mb-3">Failed to load from {currentEmbed.name}</p>
-                {embedSrc < EMBED_SOURCES.length - 1 ? (
-                  <button
-                    onClick={() => { setEmbedSrc(s => s + 1); setEmbedError(false); }}
-                    className="px-4 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition-all"
-                  >
-                    Try Next Source
-                  </button>
-                ) : (
-                  <p className="text-xs text-gray-600">No alternative sources available</p>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2 mt-3">
-            {EMBED_SOURCES.map((s, i) => (
-              <button
-                key={s.name}
-                onClick={() => { setEmbedSrc(i); setEmbedError(false); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  embedSrc === i
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-[var(--bg-card)] border border-[var(--border)] text-gray-400 hover:text-white'
-                }`}
-              >
-                {s.name}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-6 flex items-start gap-4">
-            {poster && (
-              <img
-                src={poster}
-                alt={title}
-                className="w-24 shrink-0 rounded-lg object-cover hidden sm:block"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-            )}
-            <div className="min-w-0">
-              <h1 className="text-xl font-bold mb-1">{title || 'Untitled'}</h1>
-              {(year || artist) && (
-                <p className="text-sm text-gray-400 mb-2">
-                  {year} {artist && <>&middot; {artist}</>} &middot; {mediaType === 'tv' ? 'TV Series' : 'Movie'}
-                </p>
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex-1 min-w-0">
+            <div className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-[var(--border)] group">
+              {mounted && (
+                <iframe
+                  key={embedSrc}
+                  src={embedUrl}
+                  className="absolute inset-0 w-full h-full"
+                  allowFullScreen
+                  allow="autoplay; encrypted-media; fullscreen"
+                  title={title}
+                  onError={() => setEmbedError(true)}
+                />
               )}
-              <a
-                href={`https://www.imdb.com/title/${imdbId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] text-xs text-gray-400 hover:text-yellow-400 hover:border-yellow-500/30 transition-all mt-2"
-              >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.564 9.336v-2.16c0-1.812-1.476-3.288-3.288-3.288H8.724c-1.812 0-3.288 1.476-3.288 3.288v8.448c0 1.812 1.476 3.288 3.288 3.288h5.552c1.812 0 3.288-1.476 3.288-3.288v-2.16l-4.764 2.76v-5.688l4.764 2.76zM21 12c0 4.968-4.032 9-9 9s-9-4.032-9-9 4.032-9 9-9 9 4.032 9 9z"/></svg>
-                View on IMDb
-              </a>
+              {embedError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 p-6">
+                  <svg className="w-12 h-12 text-gray-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm text-gray-400 mb-3">Failed to load from {currentEmbed.name}</p>
+                  {embedSrc < EMBED_SOURCES.length - 1 ? (
+                    <button
+                      onClick={() => { setEmbedSrc(s => s + 1); setEmbedError(false); }}
+                      className="px-4 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition-all"
+                    >
+                      Try Next Source
+                    </button>
+                  ) : (
+                    <p className="text-xs text-gray-600">All sources failed. Try again later.</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 mt-3 flex-wrap">
+              {EMBED_SOURCES.map((s, i) => (
+                <button
+                  key={s.name}
+                  onClick={() => { setEmbedSrc(i); setEmbedError(false); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    embedSrc === i
+                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20'
+                      : 'bg-[var(--bg-card)] border border-[var(--border)] text-gray-400 hover:text-white hover:border-blue-500/30'
+                  }`}
+                >
+                  {s.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-6 bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5">
+              <div className="flex items-start gap-4">
+                {poster && (
+                  <img
+                    src={poster}
+                    alt={title}
+                    className="w-20 sm:w-28 rounded-xl object-cover shrink-0 hidden sm:block"
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-xl sm:text-2xl font-bold mb-2">{title || 'Untitled'}</h1>
+
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-gray-400 mb-3">
+                    {rating && (
+                      <span className="flex items-center gap-1 text-yellow-400 font-semibold">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        {rating}
+                      </span>
+                    )}
+                    {year && <span>{year}</span>}
+                    {artist && artist !== 'TV' && <span>{artist}</span>}
+                    <span className="px-2 py-0.5 rounded bg-[var(--bg-hover)] text-xs uppercase">
+                      {mediaType === 'tv' ? 'TV Series' : 'Movie'}
+                    </span>
+                  </div>
+
+                  {genreList.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {genreList.map(g => (
+                        <span key={g} className="px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[11px] text-blue-400">
+                          {g}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {description && (
+                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">{description}</p>
+                  )}
+
+                  <a
+                    href={`https://www.imdb.com/title/${imdbId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-hover)] border border-[var(--border)] text-xs text-gray-400 hover:text-yellow-400 hover:border-yellow-500/30 transition-all mt-3"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.564 9.336v-2.16c0-1.812-1.476-3.288-3.288-3.288H8.724c-1.812 0-3.288 1.476-3.288 3.288v8.448c0 1.812 1.476 3.288 3.288 3.288h5.552c1.812 0 3.288-1.476 3.288-3.288v-2.16l-4.764 2.76v-5.688l4.764 2.76zM21 12c0 4.968-4.032 9-9 9s-9-4.032-9-9 4.032-9 9-9 9 4.032 9 9z" /></svg>
+                    View on IMDb
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <CommentSection
+                animeId={0}
+                episode={0}
+                storageKey={`anibyte_comments_${mediaType}_${imdbId}`}
+              />
             </div>
           </div>
+        </div>
 
-          <CommentSection
-            animeId={0}
-            episode={0}
-            storageKey={`anibyte_comments_movie_${imdbId}`}
-          />
+        <div className="mt-10">
+          <Link
+            href="/movies"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Movies & TV
+          </Link>
         </div>
       </div>
     </div>
