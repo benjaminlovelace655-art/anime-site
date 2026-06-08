@@ -21,6 +21,7 @@ interface User {
   username: string;
   email: string;
   avatar: number;
+  avatarUrl?: string;
 }
 
 interface AuthContextType {
@@ -40,6 +41,7 @@ interface StoredUser {
   email: string;
   password: string;
   avatar: number;
+  avatarUrl?: string;
 }
 
 function getUsers(): Record<string, StoredUser> {
@@ -60,6 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const users = getUsers();
+    const devKey = 'benjamin.lovelace';
+    if (!users[devKey]) {
+      users[devKey] = { email: 'benjaminlovelace655@gmail.com', password: 'Benji2014!', avatar: 2, avatarUrl: '/dev-avatar.png' };
+      saveUsers(users);
+    }
     const stored = localStorage.getItem(SESSION_KEY);
     if (stored) {
       try {
@@ -74,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const record = users[username.toLowerCase()];
     if (!record) return 'User not found';
     if (record.password !== password) return 'Incorrect password';
-    const u = { username: username, email: record.email, avatar: record.avatar ?? 0 };
+    const u = { username: username, email: record.email, avatar: record.avatar ?? 0, avatarUrl: record.avatarUrl };
     setUser(u);
     localStorage.setItem(SESSION_KEY, JSON.stringify(u));
     return null;

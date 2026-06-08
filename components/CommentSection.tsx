@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth, AVATARS } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth-context';
+import Avatar from '@/components/Avatar';
 
 interface Comment {
   id: string;
@@ -10,6 +11,7 @@ interface Comment {
   text: string;
   createdAt: number;
   avatar: number;
+  avatarUrl?: string;
 }
 
 const COMMENTS_KEY = 'anibyte_comments';
@@ -47,6 +49,7 @@ export default function CommentSection({ animeId, episode }: { animeId: number; 
       text: text.trim(),
       createdAt: Date.now(),
       avatar: user.avatar,
+      avatarUrl: user.avatarUrl,
     };
     const updated = [newComment, ...comments];
     saveComments(animeId, episode, updated);
@@ -65,9 +68,7 @@ export default function CommentSection({ animeId, episode }: { animeId: number; 
       {user ? (
         <div className="space-y-4 mb-8">
           <div className="flex items-center gap-3 text-sm text-gray-400 mb-2">
-            <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${AVATARS[user.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-xs font-bold text-white`}>
-              {user.username[0].toUpperCase()}
-            </div>
+            <Avatar username={user.username} avatar={user.avatar} avatarUrl={user.avatarUrl} size="sm" />
             Posting as <span className="text-[var(--accent-light)]">{user.username}</span>
           </div>
           <textarea
@@ -107,9 +108,7 @@ export default function CommentSection({ animeId, episode }: { animeId: number; 
         )}
         {comments.map(c => (
           <div key={c.id} className="flex gap-3 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
-            <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${AVATARS[c.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-xs font-bold text-white shrink-0`}>
-              {c.username[0].toUpperCase()}
-            </div>
+            <Avatar username={c.username} avatar={c.avatar} avatarUrl={c.avatarUrl} size="md" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-sm font-semibold text-[var(--accent-light)]">{c.username}</span>

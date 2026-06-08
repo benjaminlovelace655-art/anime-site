@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, AVATARS } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth-context';
+import Avatar from '@/components/Avatar';
 
 export default function Navbar() {
   const [query, setQuery] = useState('');
@@ -86,9 +87,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-sm font-medium hover:border-[var(--accent)] transition-all"
             >
-              <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${AVATARS[user.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-[10px] font-bold text-white`}>
-                {user.username[0].toUpperCase()}
-              </div>
+              <Avatar username={user.username} avatar={user.avatar} avatarUrl={user.avatarUrl} size="sm" />
               <span className="hidden sm:block text-white max-w-[100px] truncate">{user.username}</span>
               <svg className={`w-3.5 h-3.5 text-gray-500 transition-transform ${menuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
@@ -126,9 +125,7 @@ export default function Navbar() {
         <div className="flex sm:hidden items-center gap-2">
           {user ? (
             <button className="p-2 rounded-xl bg-[var(--bg-card)] text-[var(--text-secondary)]" aria-label="Profile">
-              <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${AVATARS[user.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-[8px] font-bold text-white`}>
-                {user.username[0].toUpperCase()}
-              </div>
+              <Avatar username={user.username} avatar={user.avatar} avatarUrl={user.avatarUrl} size="sm" />
             </button>
           ) : (
             <Link href="/login" className="p-2 rounded-xl bg-[var(--bg-card)] text-[var(--text-secondary)]" aria-label="Sign In">
