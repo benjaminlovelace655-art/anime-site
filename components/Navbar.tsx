@@ -1,13 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth, AVATARS } from '@/lib/auth-context';
 
 export default function Navbar() {
   const [query, setQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -76,19 +80,63 @@ export default function Navbar() {
           </div>
         </form>
 
-        <button className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          Sign In
-        </button>
-
-        <div className="flex sm:hidden items-center gap-2">
-          <button className="p-2 rounded-xl bg-[var(--bg-card)] text-[var(--text-secondary)]" aria-label="Sign In">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        {user ? (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-sm font-medium hover:border-[var(--accent)] transition-all"
+            >
+              <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${AVATARS[user.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-[10px] font-bold text-white`}>
+                {user.username[0].toUpperCase()}
+              </div>
+              <span className="hidden sm:block text-white max-w-[100px] truncate">{user.username}</span>
+              <svg className={`w-3.5 h-3.5 text-gray-500 transition-transform ${menuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            {menuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+                <div className="absolute right-0 top-full mt-2 w-48 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] shadow-xl z-20 py-1 animate-scale-in">
+                  <div className="px-4 py-2 border-b border-[var(--border)]">
+                    <p className="text-sm font-medium text-white truncate">{user.username}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { logout(); setMenuOpen(false); }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-          </button>
+            Sign In
+          </Link>
+        )}
+
+        <div className="flex sm:hidden items-center gap-2">
+          {user ? (
+            <button className="p-2 rounded-xl bg-[var(--bg-card)] text-[var(--text-secondary)]" aria-label="Profile">
+              <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${AVATARS[user.avatar]?.gradient || 'from-emerald-500 to-green-600'} flex items-center justify-center text-[8px] font-bold text-white`}>
+                {user.username[0].toUpperCase()}
+              </div>
+            </button>
+          ) : (
+            <Link href="/login" className="p-2 rounded-xl bg-[var(--bg-card)] text-[var(--text-secondary)]" aria-label="Sign In">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
     </header>

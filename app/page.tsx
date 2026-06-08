@@ -20,11 +20,11 @@ export default async function Home() {
     <div>
       <HeroSection />
 
-      <div className="max-w-7xl mx-auto px-4 -mt-32 relative z-10 pb-20">
+      <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-10 pb-20">
         <ScrollReveal delay={0}>
           <Link
             href="/anitanks"
-            className="group relative block mb-8 overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-900/20 via-[var(--bg-card)] to-emerald-900/10 p-5 transition-all hover:border-emerald-500/40"
+            className="group relative block mt-8 mb-8 overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-900/20 via-[var(--bg-card)] to-emerald-900/10 p-5 transition-all hover:border-emerald-500/40"
           >
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(16,185,129,0.08),transparent_70%)]" />
             <div className="relative z-[1] flex items-center gap-4">

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getAnimeById, getAnimeEpisodes, Anime, AnimeEpisode } from '@/lib/api';
 import VideoPlayer from '@/components/VideoPlayer';
 import EpisodeList from '@/components/EpisodeList';
+import CommentSection from '@/components/CommentSection';
 
 export default function WatchPage({
   params,
@@ -120,6 +121,8 @@ export default function WatchPage({
           </div>
         </div>
       </div>
+
+      <CommentSection animeId={anime.mal_id} episode={currentEp} />
     </div>
   );
 }
