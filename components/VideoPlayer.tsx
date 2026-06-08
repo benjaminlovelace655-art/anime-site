@@ -21,7 +21,7 @@ export default function VideoPlayer({ animeId, episode, title, animeTitle, image
   const [autoNext, setAutoNext] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('anilove-player-settings');
+    const saved = localStorage.getItem('anibyte-player-settings');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -33,7 +33,7 @@ export default function VideoPlayer({ animeId, episode, title, animeTitle, image
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('anilove-player-settings', JSON.stringify({ autoPlay, autoSkipIntro, autoNext }));
+    localStorage.setItem('anibyte-player-settings', JSON.stringify({ autoPlay, autoSkipIntro, autoNext }));
   }, [autoPlay, autoSkipIntro, autoNext]);
 
   const servers = [

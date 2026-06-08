@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg overflow-hidden">
-                <img src="/founder-icon.png" alt="AniLove" className="w-full h-full object-cover" />
+                <img src="/founder-icon.png" alt="AniByte" className="w-full h-full object-cover" />
               </div>
               <span className="font-bold text-lg">
                 <span className="gradient-text">AniByte</span>

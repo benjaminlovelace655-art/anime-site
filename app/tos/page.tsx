@@ -16,7 +16,7 @@ export default function TosPage() {
         <h2 className="text-lg font-bold text-white pt-4">Intellectual Property</h2>
         <p>All anime data, images, and metadata are property of their respective owners (MyAnimeList, anime studios, and distributors). AniByte claims no ownership over any content displayed.</p>
         <h2 className="text-lg font-bold text-white pt-4">Third-Party Services</h2>
-        <p>Video streams are provided by third-party services over which AniLove has no control. We are not responsible for the content, availability, or practices of these services.</p>
+        <p>Video streams are provided by third-party services over which AniByte has no control. We are not responsible for the content, availability, or practices of these services.</p>
         <h2 className="text-lg font-bold text-white pt-4">Limitation of Liability</h2>
         <p>AniByte is provided &ldquo;as is&rdquo; without any warranty. We are not liable for any damages arising from the use of this site.</p>
         <h2 className="text-lg font-bold text-white pt-4">Changes</h2>

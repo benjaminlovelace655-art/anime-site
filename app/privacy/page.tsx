@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         Privacy Policy
       </h1>
       <div className="space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
-        <p>Your privacy is important to us. This policy outlines what information AniLove collects and how it is used.</p>
+        <p>Your privacy is important to us. This policy outlines what information AniByte collects and how it is used.</p>
         <h2 className="text-lg font-bold text-white pt-4">Information We Collect</h2>
         <p>AniByte does not collect any personal information. We do not require registration, email addresses, or any form of account creation.</p>
         <h2 className="text-lg font-bold text-white pt-4">Local Storage</h2>
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         </ul>
         <p>This data stays on your device and is never sent to our servers.</p>
         <h2 className="text-lg font-bold text-white pt-4">Third-Party Services</h2>
-        <p>Video streams are embedded from third-party services. These services may set their own cookies or collect data according to their own privacy policies. AniLove has no control over this.</p>
+        <p>Video streams are embedded from third-party services. These services may set their own cookies or collect data according to their own privacy policies. AniByte has no control over this.</p>
         <h2 className="text-lg font-bold text-white pt-4">No Tracking</h2>
         <p>AniByte does not use analytics, tracking pixels, or any form of user tracking. We do not serve ads.</p>
         <h2 className="text-lg font-bold text-white pt-4">Contact</h2>

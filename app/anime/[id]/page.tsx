@@ -6,9 +6,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   try {
     const { data } = await getAnimeById(Number(id));
-    return { title: `${data.title_english || data.title} — AniLove`, description: data.synopsis?.slice(0, 160) };
+    return { title: `${data.title_english || data.title} — AniByte`, description: data.synopsis?.slice(0, 160) };
   } catch {
-    return { title: 'Anime Not Found — AniLove' };
+    return { title: 'Anime Not Found — AniByte' };
   }
 }
 

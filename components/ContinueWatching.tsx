@@ -17,7 +17,7 @@ export default function ContinueWatching() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('anilove_continue');
+      const stored = localStorage.getItem('anibyte_continue');
       if (stored) {
         const parsed = JSON.parse(stored) as ContinueItem[];
         setItems(parsed.slice(0, 10));
@@ -28,7 +28,7 @@ export default function ContinueWatching() {
   const removeItem = (mal_id: number) => {
     const updated = items.filter(i => i.mal_id !== mal_id);
     setItems(updated);
-    localStorage.setItem('anilove_continue', JSON.stringify(updated));
+    localStorage.setItem('anibyte_continue', JSON.stringify(updated));
   };
 
   if (!items.length) return null;
@@ -41,7 +41,7 @@ export default function ContinueWatching() {
           Continue Watching
         </h2>
         <button
-          onClick={() => { setItems([]); localStorage.removeItem('anilove_continue'); }}
+          onClick={() => { setItems([]); localStorage.removeItem('anibyte_continue'); }}
           className="text-xs text-[var(--text-muted)] hover:text-white transition-colors"
         >
           Clear All

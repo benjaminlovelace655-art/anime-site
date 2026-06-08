@@ -7,7 +7,7 @@ export default function AboutPage() {
     <div className="max-w-3xl mx-auto px-4 py-20 pt-28">
       <h1 className="text-3xl font-bold flex items-center gap-3 mb-8">
         <span className="w-1 h-7 rounded-full bg-gradient-to-b from-emerald-600 to-green-500" />
-        About AniLove
+        About AniByte
       </h1>
       <div className="space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
         <p>AniByte is a free anime discovery and streaming platform built for fans by a fan. We aggregate anime metadata from MyAnimeList via the Jikan API and provide direct links to streaming sources.</p>

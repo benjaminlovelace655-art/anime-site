@@ -11,13 +11,13 @@ export default function FounderPage() {
         <p className="text-lg text-[var(--accent-light)] font-semibold">Benjamin Lovelace</p>
         <div className="h-px bg-[var(--border)] my-6" />
         <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-8">
-          Creator of AniLove — a free anime streaming platform built for fans, by fans.
+          Creator of AniByte — a free anime streaming platform built for fans, by fans.
         </p>
         <Link
           href="/"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] text-sm font-semibold hover:border-[var(--accent)] hover:text-white transition-all"
         >
-          ← Back to AniLove
+          ← Back to AniByte
         </Link>
       </div>
     </div>

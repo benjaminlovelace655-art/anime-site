@@ -8,7 +8,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import CustomCursor from "@/components/CustomCursor";
 import SocialButtons from "@/components/SocialButtons";
 import BackToTop from "@/components/BackToTop";
-import AuthProvider from "@/components/AuthProvider";
+
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
@@ -29,16 +29,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark h-full antialiased">
       <body className={`${inter.variable} min-h-full flex flex-col bg-[#050505] pb-16 lg:pb-0`}>
-        <AuthProvider>
-          <CustomCursor />
-          <Navbar />
-          <SideDock />
-          <main className="flex-1 lg:ml-12">{children}</main>
-          <Footer />
-          <MobileBottomNav />
-          <SocialButtons />
-          <BackToTop />
-        </AuthProvider>
+        <CustomCursor />
+        <Navbar />
+        <SideDock />
+        <main className="flex-1 lg:ml-12">{children}</main>
+        <Footer />
+        <MobileBottomNav />
+        <SocialButtons />
+        <BackToTop />
       </body>
     </html>
   );
