@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Status — AniLove' };
+export const metadata = { title: 'Status — AniByte' };
 
 export default function StatusPage() {
   return (

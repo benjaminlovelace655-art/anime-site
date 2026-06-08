@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Contact — AniLove' };
+export const metadata = { title: 'Contact — AniByte' };
 
 export default function ContactPage() {
   return (

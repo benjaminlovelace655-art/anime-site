@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'DMCA — AniLove' };
+export const metadata = { title: 'DMCA — AniByte' };
 
 export default function DmcaPage() {
   return (
@@ -10,9 +10,9 @@ export default function DmcaPage() {
         DMCA Notice
       </h1>
       <div className="space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
-        <p>AniLove respects the intellectual property rights of others. We comply with the Digital Millennium Copyright Act (DMCA).</p>
+        <p>AniByte respects the intellectual property rights of others. We comply with the Digital Millennium Copyright Act (DMCA).</p>
         <h2 className="text-lg font-bold text-white pt-4">No Hosted Content</h2>
-        <p>AniLove does not host, store, or upload any video content on its servers. All video streams are embedded from third-party services. We are a directory of links to publicly available content.</p>
+        <p>AniByte does not host, store, or upload any video content on its servers. All video streams are embedded from third-party services. We are a directory of links to publicly available content.</p>
         <h2 className="text-lg font-bold text-white pt-4">Third-Party Services</h2>
         <p>If you believe your copyrighted work has been made available through our site in a way that constitutes copyright infringement, please contact the respective third-party video hosting service directly, as we do not control their content.</p>
         <h2 className="text-lg font-bold text-white pt-4">Contact</h2>

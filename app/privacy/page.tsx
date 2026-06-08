@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Privacy Policy — AniLove' };
+export const metadata = { title: 'Privacy Policy — AniByte' };
 
 export default function PrivacyPage() {
   return (
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       <div className="space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
         <p>Your privacy is important to us. This policy outlines what information AniLove collects and how it is used.</p>
         <h2 className="text-lg font-bold text-white pt-4">Information We Collect</h2>
-        <p>AniLove does not collect any personal information. We do not require registration, email addresses, or any form of account creation.</p>
+        <p>AniByte does not collect any personal information. We do not require registration, email addresses, or any form of account creation.</p>
         <h2 className="text-lg font-bold text-white pt-4">Local Storage</h2>
         <p>We use your browser&apos;s local storage to save preferences such as:</p>
         <ul className="list-disc pl-5 space-y-1">
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         <h2 className="text-lg font-bold text-white pt-4">Third-Party Services</h2>
         <p>Video streams are embedded from third-party services. These services may set their own cookies or collect data according to their own privacy policies. AniLove has no control over this.</p>
         <h2 className="text-lg font-bold text-white pt-4">No Tracking</h2>
-        <p>AniLove does not use analytics, tracking pixels, or any form of user tracking. We do not serve ads.</p>
+        <p>AniByte does not use analytics, tracking pixels, or any form of user tracking. We do not serve ads.</p>
         <h2 className="text-lg font-bold text-white pt-4">Contact</h2>
         <p>If you have questions about this policy, reach out via <a href="/contact" className="text-[var(--accent-light)] hover:underline">our contact page</a>.</p>
       </div>

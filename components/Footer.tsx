@@ -11,7 +11,7 @@ export default function Footer() {
                 <img src="/founder-icon.png" alt="AniLove" className="w-full h-full object-cover" />
               </div>
               <span className="font-bold text-lg">
-                <span className="gradient-text">AniLove</span>
+                <span className="gradient-text">AniByte</span>
               </span>
             </Link>
             <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-sm">
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-[var(--border)] pt-8 text-center">
-           <p className="text-xs text-[var(--text-muted)]">AniLove does not host any videos. All anime data is provided by MyAnimeList (Jikan API).</p>
+           <p className="text-xs text-[var(--text-muted)]">AniByte does not host any videos. All anime data is provided by MyAnimeList (Jikan API).</p>
           <p className="text-xs text-[var(--text-muted)] mt-1">For testing and educational purposes only. Not affiliated with any anime studio or distributor.</p>
           <p className="text-xs text-[var(--text-muted)] mt-4">Made with <span className="text-red-500">❤</span> by Benjamin Lovelace</p>
         </div>

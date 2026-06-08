@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 export type WatchStatus = 'Watching' | 'Planning' | 'Completed' | 'Paused' | 'Dropped' | null;
 
-const STORAGE_KEY = 'anilove-watchlist';
+const STORAGE_KEY = 'anibyte-watchlist';
 
 export function useWatchlist(animeId: number) {
   const [status, setStatus] = useState<WatchStatus>(null);
