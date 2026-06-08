@@ -55,7 +55,8 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-6 text-sm text-[var(--text-secondary)]">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/search" className="hover:text-white transition-colors">Browse</Link>
+            <Link href="/search" className="hover:text-white transition-colors">Anime</Link>
+            <Link href="/movies" className="hover:text-white transition-colors">Movies & TV</Link>
             <Link href="/anitanks" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Play
